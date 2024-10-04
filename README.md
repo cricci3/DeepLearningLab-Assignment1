@@ -1,3 +1,2 @@
 # DeepLearningLab-Assignment1
-##  Polynomialregressionwithgradientdescent
-
+##  Polynomial regression with gradient descent
