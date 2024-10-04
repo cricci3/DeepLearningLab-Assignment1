@@ -7,7 +7,7 @@ $$
 p(z) = \frac{z^4}{30} − \frac{z^3}{10} +5z^2 −z +1 = \sum^4_{k=0} z^kw_k
 $$
 
-where $w =[w_0,w_1,w_2,w_3,w_4]^T = [1,−1,5,−0.1,\frac{1}{30}]^T. This polynomial can be also expressed as the dot product of two vectors, namely
+where $w =[w_0,w_1,w_2,w_3,w_4]^T = [1,−1,5,−0.1,\frac{1}{30}]^T$. This polynomial can be also expressed as the dot product of two vectors, namely
 
 $$
 p(z) = w^Tx, x=[1,z,z^2,z^3,z^4]^T
