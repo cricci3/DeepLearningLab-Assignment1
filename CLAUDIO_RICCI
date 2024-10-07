@@ -34,8 +34,6 @@ def create_dataset(coeffs, z_range, sample_size, sigma, seed=42):
     # Create matrix X = [1,z,z**2,z**3,z**4]
     X = torch.stack([torch.ones(sample_size), z, z**2, z**3, z**4], dim=1)
 
-    print(X)
-
     # Compute hat(y)
     y_hat = sum(coeff * z**i for i, coeff in enumerate(coeffs))
 
@@ -124,7 +122,6 @@ if __name__ == '__main__':
     val_loss_vals = []
 
     weight_list = []
-    bias_list = []
 
     for step in range(n_steps): # Number of updates of the gradient
         model.train() # Set the model in training mode
@@ -149,7 +146,6 @@ if __name__ == '__main__':
             train_loss_vals.append(loss.item())
 
             weight_list.append(model.weight.flatten().tolist())
-            # bias_list.append(model.bias.tolist())
 
     print("Step:", step, "- Loss eval:", loss_val.item(), "- Loss train:", loss.item())
 
@@ -170,21 +166,17 @@ if __name__ == '__main__':
     '''
     Code for Q8
     '''
-
     z_min, z_max = (-2,2)
     z = np.linspace(z_min, z_max)
     # Compute the true polynomial
     y_true = np.polyval(coeffs[::-1], z)
 
     est_weight = model.weight.flatten().tolist()
-    #est_bias = model.bias.tolist()
     est_coeffs = est_weight[::-1]
 
     # Compute the estimated polynomial
     # (1 * est_weight[4] + z * est_weight[3] + z**2 * est_weight[2] + z**3 * est_weight[1] + z**4 * est_weight[0] + est_bias[0])
     est_y = np.polyval(est_coeffs, z)
-    # +[est_bias[0]]
-
 
     plt.plot(z, y_true, color='b', label='True Polynomial')
     plt.plot(z, est_y, color='c', label='Estimated Polynomial')
