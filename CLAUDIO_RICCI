@@ -16,7 +16,7 @@ def plot_polynomial(coeffs, z_range, color='b'):
     plt.xlabel('z')
     plt.ylabel('p(z)')
     plt.show()
-    plt.savefig("polynomial")
+    plt.savefig("images/polynomial")
 
 '''
     Code for Q3
@@ -58,7 +58,7 @@ def visualize_data(X, y, coeffs, z_range, title):
     plt.ylabel('p(z)')
     plt.legend()
     plt.show()
-    plt.savefig(title)
+    plt.savefig("images/"+title)
 
 if __name__ == '__main__':
     '''
@@ -161,7 +161,7 @@ if __name__ == '__main__':
     plt.xlabel("Steps")
     plt.ylabel("Loss value")
     plt.show()
-    plt.savefig("Loss")
+    plt.savefig("images/Loss")
 
     '''
     Code for Q8
@@ -185,7 +185,7 @@ if __name__ == '__main__':
     plt.ylabel('p(z)')
     plt.legend()
     plt.show()
-    plt.savefig("True vs estimated")
+    plt.savefig("images/True vs estimated")
 
     '''
     Code for Q9
@@ -212,4 +212,4 @@ if __name__ == '__main__':
     plt.title('Evolution of Parameters During Training')
     plt.legend()
     plt.show()
-    plt.savefig("parameters")
+    plt.savefig("images/parameters")
