@@ -122,6 +122,7 @@ if __name__ == '__main__':
     val_loss_vals = []
 
     weight_list = []
+    #bias_list = []
 
     for step in range(n_steps): # Number of updates of the gradient
         model.train() # Set the model in training mode
@@ -146,6 +147,8 @@ if __name__ == '__main__':
             train_loss_vals.append(loss.item())
 
             weight_list.append(model.weight.flatten().tolist())
+            #bias_list.append(model.bias.tolist())
+            #print(model.bias)
 
     print("Step:", step, "- Loss eval:", loss_val.item(), "- Loss train:", loss.item())
 
@@ -172,11 +175,13 @@ if __name__ == '__main__':
     y_true = np.polyval(coeffs[::-1], z)
 
     est_weight = model.weight.flatten().tolist()
+    #est_bias = model.bias.tolist()
     est_coeffs = est_weight[::-1]
 
     # Compute the estimated polynomial
     # (1 * est_weight[4] + z * est_weight[3] + z**2 * est_weight[2] + z**3 * est_weight[1] + z**4 * est_weight[0] + est_bias[0])
     est_y = np.polyval(est_coeffs, z)
+    # + est_bias[0]
 
     plt.plot(z, y_true, color='b', label='True Polynomial')
     plt.plot(z, est_y, color='c', label='Estimated Polynomial')
@@ -191,6 +196,7 @@ if __name__ == '__main__':
     Code for Q9
     '''
     weight_array = np.array(weight_list)
+    #bias_array = np.array(bias_list)
 
     colors = ['blue', 'orange', 'green', 'red', 'pink']
     # Plotta i pesi
@@ -200,6 +206,9 @@ if __name__ == '__main__':
     # Aggiungi linee orizzontali per i valori veri
     for i in range(5):
         plt.axhline(y=coeffs[i], linestyle='--', label=f'True w'+str(i), color=colors[i])
+
+    #plt.plot(np.arange(n_steps), bias_array, label=f'bias')
+    #plt.axhline(y=1, linestyle='--', label=f'True bias')
 
     plt.xlabel('Steps')
     plt.ylabel('Parameter Value')
