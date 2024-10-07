@@ -210,6 +210,7 @@ if __name__ == '__main__':
     plt.xlabel('Steps')
     plt.ylabel('Parameter Value')
     plt.title('Evolution of Parameters During Training')
-    plt.legend()
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.tight_layout()
     plt.show()
     plt.savefig("images/parameters")
