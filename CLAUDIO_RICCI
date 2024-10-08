@@ -227,31 +227,39 @@ if __name__ == '__main__':
         # Compute hat(y)
         y_hat = 2 * torch.log(x+1)+3
 
-        # Compute y (Add Gaussian noise)
+        # Compute y (Add Gaussian noise) with mean=0 and std_dev=sigma
         y = y_hat + torch.normal(torch.zeros(sample_size), sigma*torch.ones(sample_size))
 
         return x, y
+    
+
+    def visualize_bonus_data(x_true, y_true, x_gen, y_gen, label):
+        plt.plot(x_true, y_true, label="True function", color="b")
+        plt.scatter(x_gen, y_gen, label=label, alpha=0.5)
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title('True vs. Generated data of f(x) = 2log(x + 1) + 3 with x interval = [-0.05,' + str(a) + ']')
+        plt.legend()
+        plt.show()
+
 
 
     a1 = 0.01
     a2 = 10
-    aa = [0.01, 10]
+    a_values = [0.01, 10]
 
-    for a in aa:
+    for a in a_values:
         x = np.linspace(-0.05, a)
         f = 2 * np.log(x+1)+3
 
-        plt.plot(x, f, label="True function", color="blue")
-        plt.xlabel('x')
-        plt.ylabel('f(x)')
-        plt.title('Plot of f(x) = 2log(x + 1) + 3 with x interval = [-0.05,'+str(a)+']')
-        #plt.legend()
-        plt.show()
-
         x_range = (-0.05, a)
+        sigma = 0.5
 
         x_train, y_train = create_bonus_dataset(x_range, train_sample_size, sigma, train_seed)
         x_val, y_val = create_bonus_dataset(x_range, val_sample_size, sigma, val_seed)
+
+        visualize_bonus_data(x, f, x_train, y_train, 'Train Data')
+        visualize_bonus_data(x, f, x_val, y_val, 'Validation Data')
 
         model = nn.Linear(1, 1, False)
         loss_fn = nn.MSELoss()
