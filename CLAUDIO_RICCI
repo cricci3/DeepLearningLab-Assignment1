@@ -16,7 +16,6 @@ def plot_polynomial(coeffs, z_range, color='b'):
     plt.xlabel('z')
     plt.ylabel('p(z)')
     plt.show()
-    plt.savefig("images/polynomial.png")
 
 '''
     Code for Q3
@@ -58,13 +57,13 @@ def visualize_data(X, y, coeffs, z_range, title):
     plt.ylabel('p(z)')
     plt.legend()
     plt.show()
-    plt.savefig("images/"+title+".png")
+
 
 if __name__ == '__main__':
     '''
     Code for Q1
     '''
-    # assert np.version.version=="2.1"
+    assert np.version.version=="2.1.0"
 
 
     '''
@@ -90,8 +89,8 @@ if __name__ == '__main__':
     '''
     Code for Q5
     '''
-    visualize_data(X_train, y_train, coeffs, z_range, "Training")
-    visualize_data(X_val, y_val, coeffs, z_range, "Validation")
+    visualize_data(X_train, y_train, coeffs, z_range, "Training data")
+    visualize_data(X_val, y_val, coeffs, z_range, "Validation data")
 
     '''
     Code for Q6
@@ -161,10 +160,10 @@ if __name__ == '__main__':
     plt.plot(range(step + 1), train_loss_vals)
     plt.plot(range(step + 1), val_loss_vals)
     plt.legend(["Training loss", "Validation loss"])
+    plt.title("Train Loss vs Evaluation Loss")
     plt.xlabel("Steps")
     plt.ylabel("Loss value")
     plt.show()
-    plt.savefig("images/Loss.png")
 
     '''
     Code for Q8
@@ -185,30 +184,25 @@ if __name__ == '__main__':
 
     plt.plot(z, y_true, color='b', label='True Polynomial')
     plt.plot(z, est_y, color='c', label='Estimated Polynomial')
-    plt.title("True vs. Estimated Polynomial")
+    plt.title("True vs Estimated Polynomial")
     plt.xlabel('z')
     plt.ylabel('p(z)')
     plt.legend()
     plt.show()
-    plt.savefig("images/True vs estimated.png")
 
     '''
     Code for Q9
     '''
     weight_array = np.array(weight_list)
-    #bias_array = np.array(bias_list)
 
     colors = ['blue', 'orange', 'green', 'red', 'pink']
-    # Plotta i pesi
+    # Plot weights
     for i in range(5):
-        plt.plot(np.arange(n_steps), weight_array[:, i], label=f'w'+str(i), color=colors[i])
+        plt.plot(np.arange(n_steps), weight_array[:, i], label=f'w'+str(i), color=colors[i], alpha=0.5)
 
-    # Aggiungi linee orizzontali per i valori veri
+    # Plot horizontal lanes for true weights
     for i in range(5):
         plt.axhline(y=coeffs[i], linestyle='--', label=f'True w'+str(i), color=colors[i])
-
-    #plt.plot(np.arange(n_steps), bias_array, label=f'bias')
-    #plt.axhline(y=1, linestyle='--', label=f'True bias')
 
     plt.xlabel('Steps')
     plt.ylabel('Parameter Value')
@@ -216,4 +210,97 @@ if __name__ == '__main__':
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout()
     plt.show()
-    plt.savefig("images/parameters.png")
+
+    '''
+    Code Bonus question
+    '''
+    def create_bonus_dataset(x_range, sample_size, sigma, seed=42):
+        # Set the random state in numpy
+        torch.manual_seed(seed)
+        # Unpack the values in z_range
+        x_min, x_max = x_range
+        # Sample sample_size points from a uniform distribution
+        x = torch.rand(sample_size)
+        # Rescale between z_min and z_max
+        x = x * (x_max - x_min) + x_min
+
+        # Compute hat(y)
+        y_hat = 2 * torch.log(x+1)+3
+
+        # Compute y (Add Gaussian noise)
+        y = y_hat + torch.normal(torch.zeros(sample_size), sigma*torch.ones(sample_size))
+
+        return x, y
+
+
+    a1 = 0.01
+    a2 = 10
+    aa = [0.01, 10]
+
+    for a in aa:
+        x = np.linspace(-0.05, a)
+        f = 2 * np.log(x+1)+3
+
+        plt.plot(x, f, label="True function", color="blue")
+        plt.xlabel('x')
+        plt.ylabel('f(x)')
+        plt.title('Plot of f(x) = 2log(x + 1) + 3 with x interval = [-0.05,'+str(a)+']')
+        #plt.legend()
+        plt.show()
+
+        x_range = (-0.05, a)
+
+        x_train, y_train = create_bonus_dataset(x_range, train_sample_size, sigma, train_seed)
+        x_val, y_val = create_bonus_dataset(x_range, val_sample_size, sigma, val_seed)
+
+        model = nn.Linear(1, 1, False)
+        loss_fn = nn.MSELoss()
+        learning_rate = 0.03
+        optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+
+        #print(x_train.shape)
+        #print(y_train.shape)
+        #print(x_val.shape)
+        #print(y_val.shape)
+
+        x_train = x_train.reshape(-1, 1)
+        x_val = x_val.reshape(-1, 1)
+        y_train = y_train.reshape(-1, 1)
+        y_val = y_val.reshape(-1, 1)
+
+        n_steps=1000
+
+        train_loss_vals = []
+        val_loss_vals = []
+
+        for step in range(n_steps): # Number of updates of the gradient
+            model.train() # Set the model in training mode
+            # Set the gradient to 0
+            optimizer.zero_grad() # Or model.zero_grad()
+            # Compute the output of the model
+            y_hat = model(x_train)
+            # Compute the loss
+            loss = loss_fn(y_hat, y_train)
+
+            # Compute the gradient
+            loss.backward()
+            # Update the parameters
+            optimizer.step()
+            with torch.no_grad():
+                # Compute the output of the model
+                y_hat_val = model(x_val)
+                # Compute the loss
+                loss_val = loss_fn(y_hat_val, y_val)
+
+                val_loss_vals.append(loss_val.item())
+                train_loss_vals.append(loss.item())
+
+        print("Step:", step, "- Loss eval:", loss_val.item(), "- Loss train:", loss.item())
+
+        plt.plot(range(step + 1), train_loss_vals)
+        plt.plot(range(step + 1), val_loss_vals)
+        plt.title("Train Loss vs Evaluation Loss with x in [-0.05,"+str(a)+"]")
+        plt.legend(["Training loss", "Validation loss"])
+        plt.xlabel("Steps")
+        plt.ylabel("Loss value")
+        plt.show()
