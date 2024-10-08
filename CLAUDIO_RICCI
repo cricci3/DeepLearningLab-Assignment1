@@ -6,7 +6,7 @@ import torch.optim as optim
 
 def plot_polynomial(coeffs, z_range, color='b'):
     z_min, z_max = z_range
-    z = np.linspace(z_min, z_max, 100)
+    z = np.linspace(z_min, z_max)
     # Compute the polynomial
     y = np.polyval(coeffs[::-1], z)
 
@@ -21,22 +21,18 @@ def plot_polynomial(coeffs, z_range, color='b'):
     Code for Q3
 '''
 def create_dataset(coeffs, z_range, sample_size, sigma, seed=42):
-    # Set the random state in numpy
     torch.manual_seed(seed)
-    # Unpack the values in z_range
     z_min, z_max = z_range
-    # Sample sample_size points from a uniform distribution
+    # generates sample_size value between [0,1)
     z = torch.rand(sample_size)
-    # Rescale between z_min and z_max
+    # Rescale
     z = z * (z_max - z_min) + z_min
 
     # Create matrix X = [1,z,z**2,z**3,z**4]
     X = torch.stack([torch.ones(sample_size), z, z**2, z**3, z**4], dim=1)
-
-    # Compute hat(y)
     y_hat = sum(coeff * z**i for i, coeff in enumerate(coeffs))
 
-    # Compute y (Add Gaussian noise)
+    # Add Gaussian noise
     y = y_hat + torch.normal(torch.zeros(sample_size), sigma*torch.ones(sample_size))
 
     return X, y
@@ -95,13 +91,9 @@ if __name__ == '__main__':
     '''
     Code for Q6
     '''
-    # DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
-
-    model = nn.Linear(5, 1, False) # Dimension of input: 5, dimension of output: 1
-    # Bias = True (defalut) loss il lower
-    # Bias = False, loss value is way more higher
+    model = nn.Linear(5, 1, False)
     loss_fn = nn.MSELoss()
-    learning_rate = 0.03 # Start with 5 like in DL_03 but to high => to loss
+    learning_rate = 0.03 # Start with 0.5 like in DL_03 but to high => to loss
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
 
     # reshape non necessario perchè usando stack fa già in 2D
@@ -111,7 +103,6 @@ if __name__ == '__main__':
     print(y_train.shape)
     print(X_val.shape)
     print(y_val.shape)
-    #model = model
 
     # non to(DEVICE) non serve GPU
 
@@ -121,7 +112,6 @@ if __name__ == '__main__':
     val_loss_vals = []
 
     weight_list = []
-    #bias_list = []
 
     for step in range(n_steps): # Number of updates of the gradient
         model.train() # Set the model in training mode
