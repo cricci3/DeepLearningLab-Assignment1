@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
         model = nn.Linear(1, 1)
         loss_fn = nn.MSELoss()
-        learning_rate = 0.05
+        learning_rate = 0.01
         optimizer = optim.SGD(model.parameters(), lr=learning_rate)
 
         x_train = x_train.reshape(-1, 1)
@@ -64,7 +64,7 @@ if __name__ == '__main__':
         y_train = y_train.reshape(-1, 1)
         y_val = y_val.reshape(-1, 1)
 
-        n_steps=200
+        n_steps=600
 
         train_loss_vals = []
         val_loss_vals = []
@@ -98,4 +98,17 @@ if __name__ == '__main__':
         plt.legend(["Training loss", "Validation loss"])
         plt.xlabel("Steps")
         plt.ylabel("Loss value")
+        plt.show()
+
+        est_weight = model.weight.flatten().tolist()
+
+        # Compute the estimated log
+        est_y = np.polyval(est_weight[::-1],x)
+
+        plt.plot(x, f, color='b', label='True Polynomial')
+        plt.plot(x, est_y, color='c', label='Estimated Polynomial')
+        plt.title("True vs Estimated Polynomial")
+        plt.xlabel('z')
+        plt.ylabel('p(z)')
+        plt.legend()
         plt.show()
