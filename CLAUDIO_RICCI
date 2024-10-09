@@ -214,14 +214,14 @@ if __name__ == '__main__':
         y = y_hat + torch.normal(torch.zeros(sample_size), sigma*torch.ones(sample_size))
 
         return x, y
-    
+        
 
     def visualize_bonus_data(x_true, y_true, x_gen, y_gen, label):
         plt.plot(x_true, y_true, label="True function", color="b")
         plt.scatter(x_gen, y_gen, label=label+' data', alpha=0.5)
         plt.xlabel('x')
         plt.ylabel('y')
-        plt.title('True vs. Generated data for '+label+' of f(x) = 2log(x + 1) + 3 with x interval = [-0.05,' + str(a) + ']')
+        plt.title('True function vs. data generated for '+label+' of f(x) = 2log(x + 1) + 3\nwith x interval = [-0.05,' + str(a) + ']')
         plt.legend()
         plt.show()
 
@@ -251,7 +251,7 @@ if __name__ == '__main__':
         y_train = y_train.reshape(-1, 1)
         y_val = y_val.reshape(-1, 1)
 
-        n_steps=1000
+        n_steps=200
 
         train_loss_vals = []
         val_loss_vals = []
@@ -281,7 +281,7 @@ if __name__ == '__main__':
 
         plt.plot(range(step + 1), train_loss_vals)
         plt.plot(range(step + 1), val_loss_vals)
-        plt.title("Train Loss vs Evaluation Loss with x in [-0.05,"+str(a)+"]")
+        plt.title("Train Loss vs Evaluation Loss\nwith x in [-0.05,"+str(a)+"]")
         plt.legend(["Training loss", "Validation loss"])
         plt.xlabel("Steps")
         plt.ylabel("Loss value")
