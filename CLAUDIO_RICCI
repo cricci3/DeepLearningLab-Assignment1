@@ -5,6 +5,9 @@ import torch.nn as nn
 import torch.optim as optim
 
 
+'''
+Code for Q2
+'''
 def plot_polynomial(coeffs, z_range, color='b'):
     z_min, z_max = z_range
     z = np.linspace(z_min, z_max)
@@ -40,6 +43,9 @@ def create_dataset(coeffs, z_range, sample_size, sigma, seed=42):
     return X, y
 
 
+'''
+Code for Q5
+'''
 def visualize_data(X, y, coeffs, z_range, title):
     z_min, z_max = z_range
     z = np.linspace(z_min, z_max)
@@ -64,9 +70,6 @@ if __name__ == '__main__':
     '''
     assert np.version.version=="2.1.0"
 
-    '''
-    Code for Q2
-    '''
     coeffs = np.array([1, -1, 5, -0.1, 1/30])  # [w_0, w_1, w_2, w_3, w_4]
     plot_polynomial(coeffs, (-4, 4))
 
@@ -290,4 +293,3 @@ if __name__ == '__main__':
     plt.xlabel("Steps")
     plt.ylabel("Loss value")
     plt.show()
-    
