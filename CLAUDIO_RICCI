@@ -1,8 +1,9 @@
-import numpy as np # Is it version 2.1 the one you are running?
+import numpy as np
 import matplotlib.pyplot as plt
-import torch # Is it version 2.4 the one you are running?
+import torch
 import torch.nn as nn
 import torch.optim as optim
+
 
 def plot_polynomial(coeffs, z_range, color='b'):
     z_min, z_max = z_range
@@ -16,6 +17,7 @@ def plot_polynomial(coeffs, z_range, color='b'):
     plt.xlabel('z')
     plt.ylabel('p(z)')
     plt.show()
+
 
 '''
     Code for Q3
@@ -36,6 +38,7 @@ def create_dataset(coeffs, z_range, sample_size, sigma, seed=42):
     y = y_hat + torch.normal(torch.zeros(sample_size), sigma*torch.ones(sample_size))
 
     return X, y
+
 
 def visualize_data(X, y, coeffs, z_range, title):
     z_min, z_max = z_range
@@ -61,13 +64,11 @@ if __name__ == '__main__':
     '''
     assert np.version.version=="2.1.0"
 
-
     '''
     Code for Q2
     '''
     coeffs = np.array([1, -1, 5, -0.1, 1/30])  # [w_0, w_1, w_2, w_3, w_4]
     plot_polynomial(coeffs, (-4, 4))
-
 
     '''
     Code for Q4
@@ -92,8 +93,6 @@ if __name__ == '__main__':
     Code for Q6
     '''
     model = nn.Linear(5, 1, False)
-    # due to the presence of a constant terms in the coefficents (1)
-    # Bias=False
     loss_fn = nn.MSELoss()
     learning_rate = 0.03 # Start with 0.5 like in DL_03 but to high => to loss
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
@@ -113,7 +112,7 @@ if __name__ == '__main__':
 
     weight_list = []
 
-    for step in range(n_steps): # Number of updates of the gradient
+    for step in range(n_steps):
         model.train()
         # Set the gradient to 0
         optimizer.zero_grad()
@@ -142,6 +141,7 @@ if __name__ == '__main__':
     # Get the final value of the parameters
     print("Final w:", model.weight, "Final b:\n", model.bias)
 
+
     '''
     Code for Q7
     '''
@@ -153,22 +153,21 @@ if __name__ == '__main__':
     plt.ylabel("Loss value")
     plt.show()
 
+
     '''
     Code for Q8
     '''
-    z_min, z_max = (-2,2)
+    z_min, z_max = z_range
     z = np.linspace(z_min, z_max)
     # Compute the true polynomial
     y_true = np.polyval(coeffs[::-1], z)
 
     est_weight = model.weight.flatten().tolist()
-    #est_bias = model.bias.tolist()
     est_coeffs = est_weight[::-1]
 
     # Compute the estimated polynomial
     # (1 * est_weight[4] + z * est_weight[3] + z**2 * est_weight[2] + z**3 * est_weight[1] + z**4 * est_weight[0] + est_bias[0])
     est_y = np.polyval(est_coeffs, z)
-    # + est_bias[0]
 
     plt.plot(z, y_true, color='b', label='True Polynomial')
     plt.plot(z, est_y, color='c', label='Estimated Polynomial')
@@ -177,6 +176,7 @@ if __name__ == '__main__':
     plt.ylabel('p(z)')
     plt.legend()
     plt.show()
+
 
     '''
     Code for Q9
@@ -198,6 +198,7 @@ if __name__ == '__main__':
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout()
     plt.show()
+
 
     '''
     Code Bonus question
@@ -289,3 +290,4 @@ if __name__ == '__main__':
     plt.xlabel("Steps")
     plt.ylabel("Loss value")
     plt.show()
+    
